@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testestestes2 - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .container { max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #555; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; }
+        .password-container { position: relative; }
+        .password-container input { padding-right: 45px; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none; font-size: 16px; }
+        .toggle-password:hover { opacity: 0.7; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .error { color: red; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 testestestes2</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <div class="password-container">
+                    <input type="password" id="password" required>
+                    <span class="toggle-password" onclick="togglePassword()">👁️</span>
+                </div>
+            </div>
+            <button type="submit">Entrar</button>
+            <div id="error" class="error"></div>
+            <p style="text-align: center; margin-top: 15px;">
+                <a href="#" onclick="openRecoveryModal()" style="color: #007bff; text-decoration: none;">Esqueci minha senha</a>
+            </p>
+        </form>
+    </div>
+
+    <!-- 🆕 MODAL RECUPERAÇÃO SENHA -->
+    <div id="recoveryModal" class="modal" style="display: none;">
+        <div class="modal-content" style="
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        ">
+            <h3 style="margin-bottom: 20px; color: #333;">Recuperar Senha</h3>
+            <p style="margin-bottom: 20px; color: #666; line-height: 1.5;">
+                Digite seu email para gerar uma nova senha de acesso
+            </p>
+            <input type="email" id="recoveryEmail" placeholder="Digite seu email" style="
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                font-size: 16px;
+                box-sizing: border-box;
+            ">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="recoverMemberPassword()" style="
+                    padding: 12px 20px;
+                    background: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                ">Recuperar Senha</button>
+                <button onclick="closeRecoveryModal()" style="
+                    padding: 12px 20px;
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 16px;
+                ">Cancelar</button>
+            </div>
+            <div id="recoveryMessage" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+        </div>
+        <div class="modal-overlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        " onclick="closeRecoveryModal()"></div>
+    </div>
+    <script>
+        // 🆕 FUNÇÃO: Exibir erro de login (UX profissional)
+        function showLoginError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.style.color = '#ff4444';
+            errorDiv.style.backgroundColor = '#ffe6e6';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.border = '1px solid #ff4444';
+            errorDiv.style.marginTop = '10px';
+            
+            // Remover erro após 5 segundos
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 🆕 FUNÇÃO: Validação real contra GitHub
+        async function validateMemberLogin(email, password) {
+            try {
+                // Obter dados do repositório dinamicamente
+                const repoPath = window.location.pathname.split('/');
+                const owner = 'felipedom10m'; // Fixo baseado no seu sistema
+                const repo = repoPath[1]; // Nome do repositório da URL
+                
+                console.log('🔍 Validando login:', email, 'no repo:', owner + '/' + repo);
+                
+                // Sanitizar email para nome de arquivo seguro
+                const safeEmail = email.replace(/[^a-zA-Z0-9@.-]/g, '_');
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/customers/${safeEmail}.json`;
+                
+                const response = await fetch(apiUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const customerData = JSON.parse(atob(data.content));
+                    
+                    console.log('📦 Dados encontrados:', customerData);
+                    
+                    // Validar senha (aceitar email como fallback temporário)
+                    if (customerData.senha === password) {
+                        localStorage.setItem('memberAuth', 'true');
+                        localStorage.setItem('memberEmail', email);
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        showLoginError('Senha incorreta');
+                    }
+                } else if (response.status === 404) {
+                    showLoginError('Acesso não encontrado para este email');
+                } else {
+                    showLoginError('Erro de conexão. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('❌ Erro validação:', error);
+                showLoginError('Erro de conexão. Tente novamente.');
+            }
+        }
+
+        // 🆕 FUNÇÕES DO MODAL DE RECUPERAÇÃO
+        function openRecoveryModal() {
+            document.getElementById('recoveryModal').style.display = 'block';
+            document.getElementById('recoveryEmail').focus();
+        }
+
+        function closeRecoveryModal() {
+            document.getElementById('recoveryModal').style.display = 'none';
+            document.getElementById('recoveryEmail').value = '';
+            document.getElementById('recoveryMessage').style.display = 'none';
+        }
+
+        function showRecoveryMessage(message, isSuccess = false) {
+            const messageDiv = document.getElementById('recoveryMessage');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+            messageDiv.style.color = isSuccess ? '#155724' : '#721c24';
+            messageDiv.style.border = `1px solid ${isSuccess ? '#c3e6cb' : '#f5c6cb'}`;
+        }
+
+        function generateRandomPassword() {
+            // Gerar senha simples para idosos: 3 letras + 4 números
+            const email = document.getElementById('recoveryEmail').value;
+            const emailPart = email.substring(0, 3).toLowerCase();
+            const numbers = Math.floor(1000 + Math.random() * 9000);
+            return emailPart + numbers; // Ex: tes1234, mar5678
+        }
+
+        // 🆕 FUNÇÃO: Exibir senha gerada com layout profissional
+        function showPasswordSuccess(password) {
+            const messageDiv = document.getElementById('recoveryMessage');
+            messageDiv.innerHTML = `
+                <div style="text-align: center; padding: 20px; line-height: 1.6;">
+                    <h4 style="color: #28a745; margin-bottom: 20px; font-size: 18px;">🔑 SUA NOVA SENHA:</h4>
+                    
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #e9ecef;">
+                        <div id="passwordDisplay" style="font-size: 28px; font-weight: bold; font-family: monospace; color: #007bff; margin-bottom: 15px; letter-spacing: 2px;">${password}</div>
+                        <button onclick="copyPasswordToClipboard('${password}')" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.2s;">📋 Copiar Senha</button>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 5px; color: #856404; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                        <strong>⚠️ IMPORTANTE:</strong><br>
+                        Anote esta senha em local seguro!<br>
+                        Esta será sua senha de acesso.
+                    </div>
+                    
+                    <button onclick="closeRecoveryModal()" style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.2s;">OK, Entendi!</button>
+                </div>
+            `;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = '#d4edda';
+            messageDiv.style.border = '1px solid #c3e6cb';
+        }
+
+        // 🆕 FUNÇÃO: Copiar senha para área de transferência
+        function copyPasswordToClipboard(password) {
+            navigator.clipboard.writeText(password).then(() => {
+                // Feedback visual temporário
+                const button = document.querySelector('#recoveryModal button[onclick*="copyPasswordToClipboard"]');
+                if (button) {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '✅ Copiado!';
+                    button.style.background = '#28a745';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.background = '#007bff';
+                    }, 2000);
+                }
+            }).catch(() => {
+                // Fallback para dispositivos mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = password;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const button = document.querySelector('#recoveryModal button[onclick*="copyPasswordToClipboard"]');
+                if (button) {
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '✅ Copiado!';
+                        button.style.background = '#28a745';
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                            button.style.background = '#007bff';
+                        }, 2000);
+                }
+            });
+        }
+
+        // 🆕 FUNÇÃO: Recuperar senha (usa API Vercel existente)
+        async function recoverMemberPassword() {
+            const email = document.getElementById('recoveryEmail').value.trim();
+            const button = event.target;
+            
+            if (!email) return showRecoveryMessage('Digite seu email');
+            if (!email.includes('@')) return showRecoveryMessage('Email inválido');
+            
+            // 🎯 LOADING COM DELAY PARA UX (problema do GitHub)
+            button.disabled = true;
+            button.innerHTML = '⏳ Gerando senha...';
+            showRecoveryMessage('Aguarde... Gerando nova senha no sistema (pode levar até 20 segundos)', true);
+            
+            try {
+                const newPassword = generateRandomPassword();
+                
+                // Obter URL do repositório dinamicamente
+                const repoPath = window.location.pathname.split('/');
+                const repositoryUrl = `https://github.com/felipedom10m/${repoPath[1]}`;
+                
+                console.log('🔄 Recuperando senha para:', email, 'repo:', repositoryUrl);
+                
+                // 🕒 DELAY REAL DE 20 SEGUNDOS (garantir GitHub atualizado)
+                await new Promise(resolve => setTimeout(resolve, 20000));
+                
+                // 🔧 CORREÇÃO: Usar endpoint local em vez de URL hardcoded
+                const response = await fetch('/update-customer-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        password: newPassword, // Parâmetro correto para o endpoint local
+                        repositoryUrl: repositoryUrl
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showPasswordSuccess(newPassword);
+                } else {
+                    showRecoveryMessage(result.error || 'Email não encontrado');
+                }
+            } catch (error) {
+                console.error('❌ Erro recuperação:', error);
+                showRecoveryMessage('Erro de conexão. Tente novamente.');
+            } finally {
+                // 🔧 SEMPRE reabilitar botão após processamento
+                button.disabled = false;
+                // Se foi sucesso, mostrar texto "Nova Senha", senão voltar ao original
+                if (document.getElementById("recoveryMessage").innerHTML.includes("SUA NOVA SENHA")) {
+                    button.innerHTML = "✅ Nova Senha Gerada";
+                    button.style.background = "#28a745";
+                } else {
+                    button.innerHTML = "Recuperar Senha";
+                    button.style.background = "#28a745";
+                }
+            }
+        }
+
+        // Função para mostrar/ocultar senha
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            // Validações básicas
+            if (!email) return showLoginError('Digite seu email');
+            if (!password) return showLoginError('Digite sua senha');
+            if (!email.includes('@')) return showLoginError('Email inválido');
+            
+            // Validação real
+            validateMemberLogin(email, password);
+        });
+    </script>
+</body>
+</html>
