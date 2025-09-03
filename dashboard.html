@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testestestes2 - Área do Aluno</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #141414;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .member-dashboard {
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .course-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-name {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        .logout-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #b8070f;
+        }
+        
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 300px));
+            gap: 24px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        
+        /* Responsividade para diferentes telas */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 280px));
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        
+        .module-card {
+            background: #1f1f1f;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            border-color: #333;
+        }
+        
+        .module-cover {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-icon {
+            font-size: 48px;
+            opacity: 0.9;
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover .module-icon {
+            transform: scale(1.1);
+        }
+        
+        .module-info {
+            padding: 20px;
+        }
+        
+        .module-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .module-stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: #333;
+            color: #ccc;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Estilos para ofertas complementares */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 300px));
+            gap: 24px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        
+        .offer-card {
+            background: #1f1f1f;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #ff6b6b;
+            position: relative;
+        }
+        
+        .offer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(255,107,107,0.3);
+        }
+        
+        .offer-cover {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .offer-icon {
+            font-size: 48px;
+            opacity: 0.9;
+            transition: transform 0.3s ease;
+        }
+        
+        .offer-lock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .offer-info {
+            padding: 20px;
+        }
+        
+        .offer-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .offer-stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .offer-buy-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .offer-buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+        }
+        
+        /* 🟢 BOTÕES DOS FORMULÁRIOS DE PAGAMENTO (PIX/CARTÃO) */
+        .offer-payment-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20a83a 100%) !important;
+        }
+        
+        .offer-payment-btn:hover {
+            box-shadow: 0 4px 12px rgba(40,167,69,0.4) !important;
+        }
+        
+        .support-section {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        
+        .support-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+        
+        .support-text {
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+        
+        .support-contacts {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .support-contact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #999;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* Modal de Vídeo */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .video-modal-content {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            width: 800px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .video-modal-header h3 {
+            font-size: 18px;
+            color: #ffffff;
+            margin: 0;
+        }
+        
+        .video-modal-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .video-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-container {
+            margin-bottom: 20px;
+        }
+        
+        .video-container video {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            background: #000;
+        }
+        
+        .pdf-container {
+            margin-bottom: 20px;
+        }
+        
+        .pdf-container iframe {
+            border: none;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+        
+        .video-modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .modal-btn:first-child {
+            background: #007bff;
+            color: white;
+        }
+        
+        .modal-btn:first-child:hover {
+            background: #0056b3;
+        }
+        
+        .modal-btn:last-child {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .modal-btn:last-child:hover {
+            background: #545b62;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .course-title {
+                font-size: 24px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .dashboard-content {
+                padding: 30px 15px;
+            }
+            
+            .support-contacts {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .video-modal-content {
+                width: 95%;
+                max-width: 95%;
+                padding: 15px;
+            }
+            
+            .video-modal-header h3 {
+                font-size: 16px;
+            }
+            
+            .video-modal-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="member-dashboard">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="course-title">🎓 testestestes2</h1>
+                <div class="user-info">
+                    <span class="user-name">👤 Aluno</span>
+                    <button class="logout-btn" onclick="logout()">🚪 Sair</button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="dashboard-content">
+            <h2 class="section-title">📚 Conteúdo do Curso</h2>
+            
+            <div class="content-grid">
+                
+    <div class="module-card" onclick="openModule('UPSELL-1')">
+      <div class="module-cover" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="module-icon">📖</div>
+      </div>
+      <div class="module-info">
+        <h3 class="module-title">UPSELL 1</h3>
+        <div class="module-stats">
+          <span class="stat">🎥 2</span>
+          
+        </div>
+      </div>
+    </div>
+                
+            </div>
+            
+            
+            
+            
+            <h2 class="section-title">🎁 Ofertas Complementares</h2>
+            <div class="offers-grid">
+                
+      <div class="offer-card">
+        <div class="offer-cover" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+          <div class="offer-icon">🔒</div>
+          <div class="offer-lock-badge">BLOQUEADO</div>
+        </div>
+        <div class="offer-info">
+          <h3 class="offer-title">🎁 Pasta curso</h3>
+          <div class="offer-stats">
+            
+            <span class="stat">📄 1</span>
+            <span class="stat">💰 Conteúdo Exclusivo</span>
+          </div>
+          <div class="offer-price-display">💰 R$ 4,99</div>
+          <button class="offer-buy-btn" onclick="buyOffer('Pasta-curso', 'Pasta curso', 4.99)">
+            🛒 Aproveitar essa Oferta
+          </button>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-cover" style="background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);">
+          <div class="offer-icon">🔒</div>
+          <div class="offer-lock-badge">BLOQUEADO</div>
+        </div>
+        <div class="offer-info">
+          <h3 class="offer-title">🎁 UPSELL 1</h3>
+          <div class="offer-stats">
+            <span class="stat">🎥 2</span>
+            
+            <span class="stat">💰 Conteúdo Exclusivo</span>
+          </div>
+          <div class="offer-price-display">💰 R$ 0,99</div>
+          <button class="offer-buy-btn" onclick="buyOffer('UPSELL-1', 'UPSELL 1', 0.99)">
+            🛒 Aproveitar essa Oferta
+          </button>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-cover" style="background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);">
+          <div class="offer-icon">🔒</div>
+          <div class="offer-lock-badge">BLOQUEADO</div>
+        </div>
+        <div class="offer-info">
+          <h3 class="offer-title">🎁 Bolo Chocolate</h3>
+          <div class="offer-stats">
+            <span class="stat">🎥 4</span>
+            
+            <span class="stat">💰 Conteúdo Exclusivo</span>
+          </div>
+          <div class="offer-price-display">💰 R$ 0,25</div>
+          <button class="offer-buy-btn" onclick="buyOffer('Bolo-Chocolate', 'Bolo Chocolate', 0.25)">
+            🛒 Aproveitar essa Oferta
+          </button>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-cover" style="background: linear-gradient(135deg, #1dd1a1 0%, #10ac84 100%);">
+          <div class="offer-icon">🔒</div>
+          <div class="offer-lock-badge">BLOQUEADO</div>
+        </div>
+        <div class="offer-info">
+          <h3 class="offer-title">🎁 Bolo Maracuja</h3>
+          <div class="offer-stats">
+            <span class="stat">🎥 2</span>
+            
+            <span class="stat">💰 Conteúdo Exclusivo</span>
+          </div>
+          <div class="offer-price-display">💰 R$ 0,25</div>
+          <button class="offer-buy-btn" onclick="buyOffer('Bolo-Maracuja', 'Bolo Maracuja', 0.25)">
+            🛒 Aproveitar essa Oferta
+          </button>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-cover" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);">
+          <div class="offer-icon">🔒</div>
+          <div class="offer-lock-badge">BLOQUEADO</div>
+        </div>
+        <div class="offer-info">
+          <h3 class="offer-title">🎁 Pudim</h3>
+          <div class="offer-stats">
+            <span class="stat">🎥 2</span>
+            
+            <span class="stat">💰 Conteúdo Exclusivo</span>
+          </div>
+          <div class="offer-price-display">💰 R$ 0,25</div>
+          <button class="offer-buy-btn" onclick="buyOffer('Pudim', 'Pudim', 0.25)">
+            🛒 Aproveitar essa Oferta
+          </button>
+        </div>
+      </div>
+            </div>
+            
+            
+            <div class="support-section">
+                <h3 class="support-title">💬 Suporte</h3>
+                <p class="support-text">Precisa de ajuda? Entre em contato conosco:</p>
+                <div class="support-contacts">
+                    <div class="support-contact">
+                        <span>📧</span>
+                        <span>suporte@seusite.com</span>
+                    </div>
+                    <div class="support-contact">
+                        <span>📱</span>
+                        <span>WhatsApp: (11) 99999-9999</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 🆕 SISTEMA DE VALIDAÇÕES DA ÁREA DE MEMBROS - INLINE -->
+    <script>
+        /**
+ * ⚡ ÁREA DE MEMBROS - VALIDAÇÕES E PAGAMENTO ⚡
+ * 
+ * Sistema completo de checkout para ofertas complementares na área de membros
+ * Inclui validações HTML5 + JavaScript profissionais e processamento de pagamento
+ * 
+ * Criado: Agosto 2025
+ * Objetivo: Centralizar e organizar validações do modal de pagamento
+ */
+
+// =============================================================================
+// 🎯 VALIDAÇÕES PROFISSIONAIS
+// =============================================================================
+
+/**
+ * Valida formato do CPF (11 dígitos)
+ */
+function validateCPF(cpf) {
+    const cleanCPF = cpf.replace(/\D/g, '');
+    return cleanCPF.length === 11;
+}
+
+/**
+ * Valida formato do email
+ */
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+/**
+ * Valida formato do telefone brasileiro
+ */
+function validatePhone(phone) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    return cleanPhone.length >= 10 && cleanPhone.length <= 11;
+}
+
+/**
+ * Valida número do cartão (exatamente 16 dígitos)
+ */
+function validateCardNumber(cardNumber) {
+    const cleanCard = cardNumber.replace(/\s/g, '');
+    return cleanCard.length === 16 && /^\d{16}$/.test(cleanCard);
+}
+
+/**
+ * Valida data de validade do cartão (MM/AA)
+ */
+function validateCardExpiry(expiry) {
+    if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+    
+    const [month, year] = expiry.split('/');
+    const monthNum = parseInt(month);
+    const yearNum = parseInt('20' + year);
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    
+    if (monthNum < 1 || monthNum > 12) return false;
+    if (yearNum < currentYear) return false;
+    if (yearNum === currentYear && monthNum < currentMonth) return false;
+    
+    return true;
+}
+
+/**
+ * Valida CVV do cartão (exatamente 3 dígitos)
+ */
+function validateCardCVV(cvv) {
+    return /^\d{3}$/.test(cvv);
+}
+
+/**
+ * Valida nome (mínimo 3 caracteres)
+ */
+function validateName(name) {
+    return name.trim().length >= 3;
+}
+
+/**
+ * Mostra erro em campo específico
+ */
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        // Remove erro anterior
+        const existingError = field.parentNode.querySelector('.field-error');
+        if (existingError) existingError.remove();
+        
+        // Adiciona novo erro
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'field-error';
+        errorDiv.textContent = message;
+        errorDiv.style.color = '#dc3545';
+        errorDiv.style.fontSize = '12px';
+        errorDiv.style.marginTop = '5px';
+        
+        field.parentNode.appendChild(errorDiv);
+        field.focus();
+        
+        // Remove erro após 5 segundos
+        setTimeout(() => {
+            if (errorDiv.parentNode) errorDiv.remove();
+        }, 5000);
+    }
+}
+
+/**
+ * Remove todos os erros de campo
+ */
+function clearFieldErrors() {
+    document.querySelectorAll('.field-error').forEach(error => error.remove());
+}
+
+/**
+ * Atualiza estado visual do botão
+ */
+function updateButtonState(button, loading, text) {
+    button.disabled = loading;
+    button.textContent = text;
+    button.style.opacity = loading ? '0.7' : '1';
+}
+
+// =============================================================================
+// 🎨 CRIAÇÃO DO MODAL DE PAGAMENTO
+// =============================================================================
+
+/**
+ * Cria e exibe modal de pagamento para ofertas
+ */
+async function createOfferPaymentModal(offerName, offerTitle, offerPrice) {
+    // Carregar dados do cliente
+    const customerData = await loadCustomerDataFromGitHub();
+    
+    // Formatação do preço
+    const priceFormatted = offerPrice.toFixed(2).replace('.', ',');
+    const pricePerInstallment2x = (offerPrice / 2).toFixed(2).replace('.', ',');
+    const pricePerInstallment3x = (offerPrice / 3).toFixed(2).replace('.', ',');
+    
+    // Criar modal dinamicamente
+    const modal = document.createElement('div');
+    modal.className = 'offer-checkout-modal';
+    modal.innerHTML = `
+        <div class="offer-modal-overlay">
+            <div class="offer-modal-content">
+                <div class="offer-modal-header">
+                    <h3>🎁 ${offerTitle}</h3>
+                    <button class="offer-modal-close" onclick="closeOfferModal()">&times;</button>
+                </div>
+                <div class="offer-modal-body">
+                    <p>👋 Oferta exclusiva para você!</p>
+                    <div class="offer-price">💰 R$ ${priceFormatted}</div>
+                    
+                    <div class="offer-payment-methods">
+                        <h4>💳 Escolha sua forma de pagamento:</h4>
+                        <button class="offer-payment-btn pix-disabled" onclick="showPixDisabledMessage()" style="background: #dc3545;">
+                            ❌ PIX Indisponível
+                        </button>
+                        <button class="offer-payment-btn" onclick="showOfferPaymentForm('${offerName}', 'card', ${offerPrice})">
+                            💳 Cartão de Crédito
+                        </button>
+                    </div>
+                    
+                    <!-- Formulário PIX -->
+                    <div id="pix-form" class="offer-payment-form" style="display: none;">
+                        <h4>📱 Pagamento via PIX</h4>
+                        <div class="form-group">
+                            <label>Nome Completo:</label>
+                            <input type="text" id="pix-name" value="${customerData?.nome || ''}" 
+                                   placeholder="Seu nome completo" 
+                                   ${customerData?.nome ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="pix-email" value="${customerData?.email || ''}" 
+                                   placeholder="seu@email.com" 
+                                   ${customerData?.email ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   >
+                        </div>
+                        <div class="form-group">
+                            <label>CPF:</label>
+                            <input type="text" id="pix-cpf" 
+                                   value="${customerData?.cpf ? customerData.cpf.replace(/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') : ''}" 
+                                   placeholder="000.000.000-00" 
+                                   ${customerData?.cpf ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   maxlength="14">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone:</label>
+                            <input type="tel" id="pix-phone" value="${customerData?.telefone || ''}" 
+                                   placeholder="(11) 99999-9999" 
+                                   ${customerData?.telefone ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   maxlength="15">
+                        </div>
+                        <button class="offer-buy-btn offer-payment-btn" onclick="processOfferPayment('${offerName}', 'pix', ${offerPrice})">
+                            🚀 Gerar PIX R$ ${priceFormatted}
+                        </button>
+                        <button class="offer-back-btn" onclick="backToPaymentMethods()">
+                            ← Voltar
+                        </button>
+                    </div>
+                    
+                    <!-- Formulário Cartão -->
+                    <div id="card-form" class="offer-payment-form" style="display: none;">
+                        <h4>💳 Pagamento com Cartão</h4>
+                        <div class="form-group">
+                            <label>Nome Completo:</label>
+                            <input type="text" id="card-name" value="${customerData?.nome || ''}" 
+                                   placeholder="Seu nome completo" 
+                                   ${customerData?.nome ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="card-email" value="${customerData?.email || ''}" 
+                                   placeholder="seu@email.com" 
+                                   ${customerData?.email ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   >
+                        </div>
+                        <div class="form-group">
+                            <label>CPF:</label>
+                            <input type="text" id="card-cpf" 
+                                   value="${customerData?.cpf ? customerData.cpf.replace(/(\\d{3})(\\d{3})(\\d{3})(\\d{2})/, '$1.$2.$3-$4') : ''}" 
+                                   placeholder="000.000.000-00" 
+                                   ${customerData?.cpf ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   maxlength="14">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone:</label>
+                            <input type="tel" id="card-phone" value="${customerData?.telefone || ''}" 
+                                   placeholder="(11) 99999-9999" 
+                                   ${customerData?.telefone ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''} 
+                                   maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <label>Número do Cartão:</label>
+                            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" 
+                                   maxlength="19"
+                                   oninput="formatCardNumber(this)">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Validade:</label>
+                                <input type="text" id="card-expiry" placeholder="MM/AA" 
+                                       maxlength="5"
+                                       oninput="formatCardExpiry(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>CVV:</label>
+                                <input type="text" id="card-cvv" placeholder="123" 
+                                       maxlength="3"
+                                       oninput="formatCardCVV(this)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome no Cartão:</label>
+                            <input type="text" id="card-holder" placeholder="Nome como impresso no cartão" 
+                                   minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label>Parcelas:</label>
+                            <select id="card-installments">
+                                <option value="1">1x de R$ ${priceFormatted} (sem juros)</option>
+                                <option value="2">2x de R$ ${pricePerInstallment2x} (sem juros)</option>
+                                <option value="3">3x de R$ ${pricePerInstallment3x} (sem juros)</option>
+                            </select>
+                        </div>
+                        <button class="offer-buy-btn offer-payment-btn" onclick="processOfferPayment('${offerName}', 'card', ${offerPrice})">
+                            🚀 Pagar R$ ${priceFormatted}
+                        </button>
+                        <button class="offer-back-btn" onclick="backToPaymentMethods()">
+                            ← Voltar
+                        </button>
+                    </div>
+                    
+                    <button class="offer-cancel-btn" onclick="closeOfferModal()">❌ Cancelar</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Adicionar estilos se não existirem
+    addOfferModalStyles();
+    
+    document.body.appendChild(modal);
+}
+
+// =============================================================================
+// 🎨 ESTILOS CSS DO MODAL
+// =============================================================================
+
+function addOfferModalStyles() {
+    if (!document.getElementById('offer-modal-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'offer-modal-styles';
+        styles.innerHTML = `
+            .offer-checkout-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+            }
+            .offer-modal-overlay {
+                background: rgba(0,0,0,0.8);
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .offer-modal-content {
+                background: white;
+                border-radius: 10px;
+                max-width: 400px;
+                width: 90%;
+                max-height: 80%;
+                overflow-y: auto;
+            }
+            .offer-modal-header {
+                padding: 20px;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .offer-modal-header h3 {
+                margin: 0;
+                color: #333;
+            }
+            .offer-modal-close {
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #999;
+            }
+            .offer-modal-body {
+                padding: 20px;
+                text-align: center;
+            }
+            .offer-price {
+                font-size: 24px;
+                font-weight: bold;
+                color: #28a745;
+                margin: 15px 0;
+            }
+            .offer-payment-methods h4 {
+                color: #333;
+                margin-bottom: 15px;
+            }
+            .offer-payment-btn {
+                display: block;
+                width: 100%;
+                padding: 15px;
+                margin: 10px 0;
+                background: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            .offer-payment-btn:hover {
+                background: #0056b3;
+            }
+            .offer-cancel-btn {
+                margin-top: 15px;
+                padding: 10px 20px;
+                background: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .offer-payment-form {
+                margin-top: 20px;
+                text-align: left;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #333;
+            }
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+            .form-group input:invalid {
+                border-color: #dc3545;
+            }
+            .form-group input:valid {
+                border-color: #28a745;
+            }
+            .form-row {
+                display: flex;
+                gap: 10px;
+            }
+            .form-row .form-group {
+                flex: 1;
+            }
+            .offer-back-btn {
+                width: 100%;
+                padding: 10px;
+                background: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .offer-back-btn:hover {
+                background: #545b62;
+            }
+            .field-error {
+                color: #dc3545;
+                font-size: 12px;
+                margin-top: 5px;
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+}
+
+// =============================================================================
+// 🎯 FORMATAÇÃO AUTOMÁTICA DOS CAMPOS
+// =============================================================================
+
+/**
+ * Formata número do cartão com espaços
+ */
+function formatCardNumber(input) {
+    let value = input.value.replace(/\s/g, '');
+    value = value.replace(/\D/g, '');
+    value = value.substring(0, 16);
+    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    input.value = value;
+}
+
+/**
+ * Formata data de validade MM/AA
+ */
+function formatCardExpiry(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    input.value = value;
+}
+
+/**
+ * Formata CVV (apenas números)
+ */
+function formatCardCVV(input) {
+    input.value = input.value.replace(/\D/g, '').substring(0, 3);
+}
+
+// =============================================================================
+// 🔄 CONTROLE DE NAVEGAÇÃO DO MODAL
+// =============================================================================
+
+/**
+ * Mostra formulário específico (PIX ou Cartão)
+ */
+function showOfferPaymentForm(offerName, paymentType, offerPrice) {
+    // Ocultar métodos de pagamento
+    document.querySelector('.offer-payment-methods').style.display = 'none';
+    document.querySelector('.offer-cancel-btn').style.display = 'none';
+    
+    // Mostrar formulário específico
+    if (paymentType === 'pix') {
+        document.getElementById('pix-form').style.display = 'block';
+    } else if (paymentType === 'card') {
+        document.getElementById('card-form').style.display = 'block';
+    }
+}
+
+// =============================================================================
+// 🎨 SISTEMA PIX INDISPONÍVEL - TOOLTIP PROFISSIONAL
+// =============================================================================
+
+/**
+ * Mostra tooltip bonito informando que PIX está indisponível
+ * Substitui o alert() feio por uma interface elegante e profissional
+ */
+function showPixDisabledMessage() {
+    // ========================================
+    // 📝 VERSÃO ANTIGA (COMENTADA PARA REVERTER FÁCIL)
+    // ========================================
+    /*
+    alert('⚠️ PIX TEMPORARIAMENTE INDISPONÍVEL\n\n' +
+          '🔴 O PIX está fora de funcionamento no momento.\n\n' +
+          '💳 Por favor, escolha a opção CARTÃO DE CRÉDITO para desbloquear sua oferta imediatamente.\n\n' +
+          '✅ O cartão funciona perfeitamente e você terá acesso instantâneo!');
+    */
+    
+    // ========================================
+    // 🎨 NOVA VERSÃO - TOOLTIP BONITO
+    // ========================================
+    
+    // Remover tooltip anterior se existir
+    const existingTooltip = document.querySelector('.pix-tooltip');
+    if (existingTooltip) existingTooltip.remove();
+    
+    // Criar tooltip bonito
+    const tooltip = document.createElement('div');
+    tooltip.className = 'pix-tooltip';
+    tooltip.innerHTML = `
+        <div class="pix-tooltip-overlay"></div>
+        <div class="pix-tooltip-content">
+            <div class="pix-tooltip-header">
+                ⚠️ PIX Temporariamente Indisponível
+            </div>
+            <div class="pix-tooltip-body">
+                🔴 O PIX está fora de funcionamento no momento.<br><br>
+                💳 <strong>Use o CARTÃO DE CRÉDITO</strong> para desbloquear sua oferta imediatamente!<br><br>
+                ✅ O cartão funciona perfeitamente!
+            </div>
+            <button class="pix-tooltip-close" onclick="removePixTooltip()">✕</button>
+            <div class="pix-tooltip-footer">
+                <button class="pix-tooltip-btn-card" onclick="redirectToCard()">💳 Usar Cartão</button>
+                <button class="pix-tooltip-btn-close" onclick="removePixTooltip()">Fechar</button>
+            </div>
+        </div>
+    `;
+    
+    // Posicionamento do tooltip
+    tooltip.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    // Adicionar estilos CSS
+    addPixTooltipStyles();
+    
+    document.body.appendChild(tooltip);
+    
+    // Auto-remover após 12 segundos
+    setTimeout(() => {
+        removePixTooltip();
+    }, 12000);
+}
+
+// ========================================
+// 🎨 ESTILOS CSS DO TOOLTIP
+// ========================================
+
+function addPixTooltipStyles() {
+    if (!document.getElementById('pix-tooltip-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'pix-tooltip-styles';
+        styles.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.8); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(50px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0.8); }
+            }
+            
+            .pix-tooltip-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+            }
+            
+            .pix-tooltip-content {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                color: white;
+                padding: 25px;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(238, 90, 82, 0.5);
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                position: relative;
+                border: 3px solid rgba(255,255,255,0.2);
+                animation: slideUp 0.4s ease;
+            }
+            
+            .pix-tooltip-header {
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            
+            .pix-tooltip-body {
+                font-size: 15px;
+                line-height: 1.6;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                margin-bottom: 25px;
+                color: rgba(255,255,255,0.95);
+            }
+            
+            .pix-tooltip-close {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border: none;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: bold;
+                transition: all 0.2s ease;
+            }
+            
+            .pix-tooltip-close:hover {
+                background: rgba(255,255,255,0.3);
+                transform: scale(1.1);
+            }
+            
+            .pix-tooltip-footer {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 5px;
+            }
+            
+            .pix-tooltip-btn-card {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: white;
+                border: none;
+                padding: 12px 25px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            }
+            
+            .pix-tooltip-btn-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            }
+            
+            .pix-tooltip-btn-close {
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border: 2px solid rgba(255,255,255,0.3);
+                padding: 10px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+            
+            .pix-tooltip-btn-close:hover {
+                background: rgba(255,255,255,0.1);
+                border-color: rgba(255,255,255,0.5);
+            }
+            
+            @media (max-width: 480px) {
+                .pix-tooltip-content {
+                    margin: 20px;
+                    padding: 20px;
+                }
+                .pix-tooltip-header { font-size: 18px; }
+                .pix-tooltip-body { font-size: 14px; }
+                .pix-tooltip-footer { flex-direction: column; gap: 10px; }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+}
+
+// ========================================
+// 🔧 FUNÇÕES AUXILIARES DO TOOLTIP
+// ========================================
+
+function removePixTooltip() {
+    const tooltip = document.querySelector('.pix-tooltip');
+    if (tooltip) {
+        tooltip.style.animation = 'fadeOut 0.2s ease';
+        setTimeout(() => {
+            if (tooltip.parentNode) tooltip.remove();
+        }, 200);
+    }
+}
+
+function redirectToCard() {
+    removePixTooltip();
+    
+    // Procurar botão do cartão e clicar automaticamente
+    setTimeout(() => {
+        const cardButton = document.querySelector('button[onclick*="card"]');
+        if (cardButton) {
+            cardButton.click();
+        }
+    }, 300);
+}
+
+/**
+ * Volta para seleção de métodos de pagamento
+ */
+function backToPaymentMethods() {
+    // Limpar erros
+    clearFieldErrors();
+    
+    // Ocultar formulários
+    document.getElementById('pix-form').style.display = 'none';
+    document.getElementById('card-form').style.display = 'none';
+    
+    // Mostrar métodos de pagamento
+    document.querySelector('.offer-payment-methods').style.display = 'block';
+    document.querySelector('.offer-cancel-btn').style.display = 'block';
+}
+
+/**
+ * Fecha modal de pagamento
+ */
+function closeOfferModal() {
+    const modal = document.querySelector('.offer-checkout-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// =============================================================================
+// ⚡ PROCESSAMENTO DE PAGAMENTO COM VALIDAÇÕES PROFISSIONAIS
+// =============================================================================
+
+/**
+ * Processa pagamento com validações completas
+ */
+function processOfferPayment(offerName, paymentType, offerPrice = 37.00) {
+    // Prevenir duplo clique
+    const button = event.target || document.querySelector('.offer-buy-btn');
+    if (button.disabled) return;
+    
+    const originalText = button.textContent;
+    
+    // Limpar erros anteriores
+    clearFieldErrors();
+    
+    // Loading state
+    if (paymentType === 'pix') {
+        updateButtonState(button, true, '⏳ Gerando PIX...');
+    } else if (paymentType === 'card') {
+        updateButtonState(button, true, '💳 Processando Cartão...');
+    }
+    
+    // Coletar dados do formulário
+    let customerData = {};
+    
+    if (paymentType === 'pix') {
+        customerData = {
+            name: document.getElementById('pix-name').value.trim(),
+            email: document.getElementById('pix-email').value.trim(),
+            cpf: document.getElementById('pix-cpf').value.replace(/\D/g, ''),
+            phone: document.getElementById('pix-phone').value.trim()
+        };
+    } else if (paymentType === 'card') {
+        customerData = {
+            name: document.getElementById('card-name').value.trim(),
+            email: document.getElementById('card-email').value.trim(),
+            cpf: document.getElementById('card-cpf').value.replace(/\D/g, ''),
+            phone: document.getElementById('card-phone').value.trim(),
+            cardNumber: document.getElementById('card-number').value.replace(/\s/g, ''),
+            cardExpiry: document.getElementById('card-expiry').value.trim(),
+            cardCvv: document.getElementById('card-cvv').value.trim(),
+            cardHolder: document.getElementById('card-holder').value.trim(),
+            installments: document.getElementById('card-installments').value
+        };
+    }
+    
+    // =============================================================================
+    // 🔍 VALIDAÇÕES PROFISSIONAIS COMPLETAS
+    // =============================================================================
+    
+    let hasErrors = false;
+    
+    // Validar nome
+    if (!validateName(customerData.name)) {
+        showFieldError(paymentType + '-name', 'Nome deve ter pelo menos 3 caracteres');
+        hasErrors = true;
+    }
+    
+    // Validar email
+    if (!validateEmail(customerData.email)) {
+        showFieldError(paymentType + '-email', 'Email inválido');
+        hasErrors = true;
+    }
+    
+    // Validar CPF
+    if (!validateCPF(customerData.cpf)) {
+        showFieldError(paymentType + '-cpf', 'CPF deve ter 11 dígitos');
+        hasErrors = true;
+    }
+    
+    // Validar telefone
+    if (!validatePhone(customerData.phone)) {
+        showFieldError(paymentType + '-phone', 'Telefone inválido');
+        hasErrors = true;
+    }
+    
+    // Validações específicas do cartão com feedback visual profissional
+    if (paymentType === 'card') {
+        // 1. VALIDAÇÃO CARTÃO
+        if (!validateCardNumber(customerData.cardNumber)) {
+            console.log('❌ BLOQUEADO: Cartão inválido!');
+            button.style.setProperty('background', '#ff9500', 'important');
+            button.innerHTML = '⚠️ Cartão deve ter 16 dígitos';
+            button.disabled = true;
+            const cardField = document.getElementById('card-number');
+            cardField.style.borderColor = '#dc3545';
+            cardField.style.borderWidth = '2px';
+            cardField.focus();
+            setTimeout(() => {
+                button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                button.disabled = false;
+                cardField.style.borderColor = '#ddd';
+                cardField.style.borderWidth = '1px';
+            }, 5000);
+            return;
+        }
+        
+        // 2. VALIDAÇÃO VALIDADE
+        if (!validateCardExpiry(customerData.cardExpiry)) {
+            console.log('❌ BLOQUEADO: Validade inválida!');
+            button.style.setProperty('background', '#ff9500', 'important');
+            button.innerHTML = '⚠️ Validade deve ser MM/AA';
+            button.disabled = true;
+            const expiryField = document.getElementById('card-expiry');
+            expiryField.style.borderColor = '#dc3545';
+            expiryField.style.borderWidth = '2px';
+            expiryField.focus();
+            setTimeout(() => {
+                button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                button.disabled = false;
+                expiryField.style.borderColor = '#ddd';
+                expiryField.style.borderWidth = '1px';
+            }, 5000);
+            return;
+        }
+        
+        // 3. VALIDAÇÃO CVV
+        if (!validateCardCVV(customerData.cardCvv)) {
+            console.log('❌ BLOQUEADO: CVV inválido!');
+            button.style.setProperty('background', '#ff9500', 'important');
+            button.innerHTML = '⚠️ CVV deve ter 3 dígitos';
+            button.disabled = true;
+            const cvvField = document.getElementById('card-cvv');
+            cvvField.style.borderColor = '#dc3545';
+            cvvField.style.borderWidth = '2px';
+            cvvField.focus();
+            setTimeout(() => {
+                button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                button.disabled = false;
+                cvvField.style.borderColor = '#ddd';
+                cvvField.style.borderWidth = '1px';
+            }, 5000);
+            return;
+        }
+        
+        // 4. VALIDAÇÃO NOME
+        if (!validateName(customerData.cardHolder)) {
+            console.log('❌ BLOQUEADO: Nome inválido!');
+            button.style.setProperty('background', '#ff9500', 'important');
+            button.innerHTML = '⚠️ Nome deve ter pelo menos 3 caracteres';
+            button.disabled = true;
+            const holderField = document.getElementById('card-holder');
+            holderField.style.borderColor = '#dc3545';
+            holderField.style.borderWidth = '2px';
+            holderField.focus();
+            setTimeout(() => {
+                button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                button.disabled = false;
+                holderField.style.borderColor = '#ddd';
+                holderField.style.borderWidth = '1px';
+            }, 5000);
+            return;
+        }
+    }
+    
+    // =============================================================================
+    // 🚀 ENVIO PARA API (MANTÉM INTEGRAÇÃO ORIGINAL)
+    // =============================================================================
+    
+    const endpoint = paymentType === 'card' ? 
+        'https://checkout-ofertas-appmax.vercel.app/api/process-card' :
+        'https://checkout-ofertas-appmax.vercel.app/api/process-pix';
+    
+    const requestData = {
+        offer: offerName,
+        paymentType: paymentType,
+        customer: {
+            name: customerData.name,
+            email: customerData.email,
+            cpf: customerData.cpf,
+            phone: customerData.phone
+        },
+        amount: offerPrice,
+        repositoryUrl: window.REPOSITORY_URL
+    };
+    
+    // Adicionar dados do cartão se necessário
+    if (paymentType === 'card') {
+        requestData.card = {
+            number: customerData.cardNumber,
+            expiry_month: customerData.cardExpiry.split('/')[0],
+            expiry_year: '20' + customerData.cardExpiry.split('/')[1],
+            cvv: customerData.cardCvv,
+            holder_name: customerData.cardHolder
+        };
+        requestData.installments = customerData.installments || 1;
+    }
+    
+    // Enviar requisição
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('✅ Resposta do servidor:', data);
+        
+        // Sistema de desbloqueio automático
+        if (data.success && data.unlock) {
+            localStorage.setItem('oferta_' + offerName, 'liberada');
+            setTimeout(() => location.reload(), 1000);
+        }
+        
+        if (data.success) {
+            updateButtonState(button, false, originalText);
+            
+            // Mostrar QR Code PIX
+            if (data.qr_code) {
+                showPixQRCode(data.qr_code, data.qr_code_base64);
+            } else {
+                closeOfferModal();
+            }
+        } else {
+            alert('❌ Erro no pagamento: ' + (data.message || 'Erro desconhecido'));
+            updateButtonState(button, false, originalText);
+        }
+    })
+    .catch(error => {
+        console.error('❌ Erro na requisição:', error);
+        alert('❌ Erro na comunicação com o servidor. Tente novamente.');
+        updateButtonState(button, false, originalText);
+    });
+}
+
+// =============================================================================
+// 📱 MODAL QR CODE PIX
+// =============================================================================
+
+/**
+ * Exibe QR Code do PIX
+ */
+function showPixQRCode(qrCode, qrCodeBase64) {
+    const modal = document.createElement('div');
+    modal.className = 'pix-qr-modal';
+    modal.innerHTML = `
+        <div class="offer-modal-overlay">
+            <div class="offer-modal-content">
+                <div class="offer-modal-body">
+                    <button class="offer-modal-close" onclick="closePixQRModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; z-index: 1;">&times;</button>
+                    <div style="text-align: center; padding: 25px 50px 20px 20px;">
+                        <h3 style="margin: 0 0 25px 0; color: #333; font-size: 18px;">📱 Escaneie com seu banco ou app</h3>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: inline-block; border: 2px solid #eee;">
+                            <img src="data:image/png;base64,${qrCodeBase64}" alt="QR Code PIX" style="width: 250px; height: 250px; display: block;">
+                        </div>
+                        
+                        <p style="color: #666; margin: 15px 0; font-size: 14px;">Ou copie e cole o código PIX:</p>
+                        
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+                            <input type="text" value="${qrCode}" readonly onclick="this.select(); document.execCommand('copy'); alert('✅ Código PIX copiado!');" style="width: 100%; border: none; background: transparent; font-family: monospace; font-size: 12px; text-align: center; cursor: pointer;">
+                        </div>
+                        
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
+                            <p style="margin: 0; color: #155724; font-size: 14px; line-height: 1.4;">
+                                ✅ <strong>Após o pagamento:</strong><br>
+                                Sua oferta será liberada automaticamente em alguns segundos!
+                            </p>
+                        </div>
+                        
+                        <button onclick="closePixQRModal()" style="margin-top: 20px; padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                            ✅ Entendi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Adicionar estilos do modal PIX
+    addPixModalStyles();
+    
+    document.body.appendChild(modal);
+}
+
+/**
+ * Fecha modal do QR Code PIX
+ */
+function closePixQRModal() {
+    const modal = document.querySelector('.pix-qr-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+/**
+ * Adiciona estilos específicos do modal PIX
+ */
+function addPixModalStyles() {
+    if (!document.getElementById('pix-modal-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'pix-modal-styles';
+        styles.innerHTML = `
+            .pix-qr-modal .offer-modal-overlay {
+                background: rgba(0,0,0,0.9);
+                backdrop-filter: blur(3px);
+            }
+            .pix-qr-modal .offer-modal-content {
+                max-width: 450px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            }
+            .pix-qr-modal .offer-modal-content {
+                position: relative;
+            }
+            .pix-qr-modal .offer-modal-body {
+                padding: 0;
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+}
+
+// =============================================================================
+// 🎯 FUNÇÃO PRINCIPAL PARA CONECTAR COM SISTEMA EXISTENTE
+// =============================================================================
+
+/**
+ * Função chamada pelos botões "Comprar Agora" da área de membros
+ * Substitui a função buyOffer original para ofertas bloqueadas
+ */
+window.buyOfferWithValidation = function(offerName, offerTitle, offerPrice) {
+    // Verificar se oferta já está liberada
+    if (localStorage.getItem('oferta_' + offerName) === 'liberada') {
+        // Se já liberada, tentar abrir como módulo
+        if (typeof openModule === 'function') {
+            try {
+                openModule(offerName, offerTitle);
+                return;
+            } catch (error) {
+                console.log('Módulo não encontrado, mas oferta já está liberada');
+                return;
+            }
+        }
+        return;
+    }
+    
+    // Se não liberada, abrir modal de pagamento
+    createOfferPaymentModal(offerName, offerTitle, offerPrice);
+};
+
+console.log('✅ Sistema de Validações da Área de Membros carregado com sucesso!');
+    </script>
+    
+    <script>
+        // 🆕 REPOSITORY URL DINÂMICO - Sempre atual do config
+        window.REPOSITORY_URL = 'https://github.com/felipedom10m/testestestes2';
+        console.log('✅ window.REPOSITORY_URL dinâmico:', window.REPOSITORY_URL);
+        
+        // Verificar autenticação
+        if (!localStorage.getItem('memberAuth')) {
+            window.location.href = 'index.html';
+        }
+        
+        // 🔓 VERIFICAR OFERTAS DESBLOQUEADAS NO CARREGAMENTO
+        document.addEventListener('DOMContentLoaded', function() {
+            // 🆕 VERIFICAÇÃO REAL: Buscar compras no GitHub
+            checkRealPurchases();
+        });
+        
+        async function checkRealPurchases() {
+            try {
+                // 🔄 VERIFICAÇÃO DUPLA: localStorage (compras na área) + GitHub (compras no checkout)
+                
+                // 1. PRIMEIRO: Verificar localStorage (compras feitas na própria área)
+                checkLocalStoragePurchases();
+                
+                // 2. SEGUNDO: Verificar GitHub (compras feitas no checkout principal)
+                let userEmail = localStorage.getItem('memberEmail');
+                if (!userEmail) {
+                    console.log('⚠️ Email não encontrado no localStorage - usando fallback para verificação');
+                    userEmail = 'teste@gmail.com'; // Fallback temporário para debug
+                }
+                console.log('🔍 DEBUG: Email usado para verificação:', userEmail);
+                console.log('🔍 Verificando compras reais para:', userEmail);
+                
+                // Buscar arquivo de compras do cliente no GitHub - ÁREA AUTÔNOMA
+                const repoPath = window.location.pathname.split('/');
+                const owner = 'felipedom10m';
+                const repo = repoPath[1]; // Nome do repositório atual
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/customers/${userEmail}.json`;
+                const response = await fetch(apiUrl);
+                
+                if (response.ok) {
+                    const apiData = await response.json();
+                    const purchaseData = JSON.parse(atob(apiData.content));
+                    console.log('📦 Dados de compra encontrados:', purchaseData);
+                    
+                    if (purchaseData.upsells_comprados && purchaseData.acesso_liberado) {
+                        // Desbloquear ofertas compradas no checkout principal
+                        unlockPurchasedOffers(purchaseData.upsells_comprados);
+                    }
+                } else {
+                    console.log('ℹ️ Nenhuma compra adicional encontrada - apenas produto principal');
+                }
+            } catch (error) {
+                console.log('ℹ️ Verificação de compras não disponível:', error.message);
+            }
+        }
+        
+        function checkLocalStoragePurchases() {
+            console.log('🔍 Verificando compras no localStorage (área de membros)...');
+            const cards = document.querySelectorAll('.offer-card');
+            
+            cards.forEach((card, index) => {
+                const button = card.querySelector('.offer-buy-btn');
+                if (button) {
+                    const onclickAttr = button.getAttribute('onclick');
+                    if (onclickAttr) {
+                        const match = onclickAttr.match(/buyOffer\('([^']+)'/);
+                        if (match) {
+                            const offerName = match[1]; // Nome real da pasta (dinâmico)
+                            
+                            // Verificar se oferta foi comprada na área (localStorage)
+                            if (localStorage.getItem('oferta_' + offerName) === 'liberada') {
+                                console.log(`✅ Oferta ${offerName} encontrada no localStorage - desbloqueando`);
+                                
+                                // 🆕 USAR MESMO MAPEAMENTO DA API VERCEL
+                                let upsellId;
+                                if (offerName === 'Modulo-2') upsellId = 1;
+                                else if (offerName === 'Modulo-3') upsellId = 2;
+                                else if (offerName === 'Modulo-1') upsellId = 3;
+                                else upsellId = parseInt(offerName) || (index + 1);
+                                
+                                unlockOfferVisually(card, upsellId, offerName);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function unlockOfferVisually(card, upsellId, offerName) {
+            const button = card.querySelector('.offer-buy-btn');
+            if (button) {
+                // Atualizar visual da oferta
+                card.querySelector('.offer-icon').textContent = '✅';
+                card.querySelector('.offer-lock-badge').textContent = 'LIBERADO';
+                button.textContent = '🎯 ACESSAR CONTEÚDO';
+                button.style.background = '#28a745';
+                
+                // Modificar onclick para abrir conteúdo
+                button.setAttribute('onclick', `openModule('${offerName}')`);
+                
+                console.log(`✅ Oferta ${upsellId} desbloqueada visualmente`);
+            }
+        }
+        
+        function unlockPurchasedOffers(purchasedUpsells) {
+            const cards = document.querySelectorAll('.offer-card');
+            cards.forEach((card, index) => {
+                const button = card.querySelector('.offer-buy-btn');
+                if (button) {
+                    // 🆕 SEXTA TENTATIVA: Usar nome da oferta (igual API Vercel)
+                    const onclickAttr = button.getAttribute('onclick');
+                    if (onclickAttr) {
+                        const match = onclickAttr.match(/'([^']+)'/);
+                        if (match) {
+                            const offerName = match[1];
+                            
+                            // 🆕 APLICAR MESMO MAPEAMENTO DA API VERCEL
+                            let upsellId;
+                            if (offerName === 'Modulo-2') upsellId = 1;
+                            else if (offerName === 'Modulo-3') upsellId = 2;
+                            else if (offerName === 'Modulo-1') upsellId = 3;
+                            else {
+                                // Para ofertas dinâmicas, usar nome diretamente ou posição como fallback
+                                upsellId = parseInt(offerName) || (index + 1);
+                            }
+                            
+                            console.log('🔍 SEXTA TENTATIVA - Verificando oferta:', offerName, '→ ID:', upsellId, 'GitHub tem:', purchasedUpsells);
+                            
+                            // 🆕 SÉTIMA TENTATIVA: Verificação dupla (número E nome)
+                            if (purchasedUpsells.includes(upsellId) || purchasedUpsells.includes(offerName)) {
+                                // Cliente comprou esta oferta - desbloquear
+                                card.querySelector('.offer-icon').textContent = '✅';
+                                card.querySelector('.offer-lock-badge').textContent = 'LIBERADO';
+                                button.textContent = '🎯 ACESSAR CONTEÚDO';
+                                button.style.background = '#28a745';
+                                
+                                // Modificar onclick para abrir conteúdo em vez de compra
+                                button.setAttribute('onclick', `openModule('${offerName}')`);
+                        
+                                console.log(`✅ Oferta ${upsellId} desbloqueada`);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Dados dos módulos para navegação (incluir ofertas)
+        const moduleData = Object.assign({"UPSELL-1":[{"name":"1.mp4","path":"UPSELL-1/1.mp4","type":"video"},{"name":"2.mp4","path":"UPSELL-1/2.mp4","type":"video"}]}, {"Pasta-curso":[{"name":"REQUERIMENTO_C_F_DE_SOUSA_16_assinado.pdf","path":"ofertas/Pasta-curso/REQUERIMENTO_C_F_DE_SOUSA_16_assinado.pdf","type":"pdf"}],"UPSELL-1":[{"name":"1.mp4","path":"ofertas/UPSELL-1/1.mp4","type":"video"},{"name":"2.mp4","path":"ofertas/UPSELL-1/2.mp4","type":"video"}],"Bolo-Chocolate":[{"name":"3.mp4","path":"ofertas/Bolo-Chocolate/3.mp4","type":"video"},{"name":"4.mp4","path":"ofertas/Bolo-Chocolate/4.mp4","type":"video"},{"name":"1.mp4","path":"ofertas/Bolo-Chocolate/UPSELL-1/1.mp4","type":"video"},{"name":"2.mp4","path":"ofertas/Bolo-Chocolate/UPSELL-1/2.mp4","type":"video"}],"Bolo-Maracuja":[{"name":"1.mp4","path":"ofertas/Bolo-Maracuja/1.mp4","type":"video"},{"name":"2.mp4","path":"ofertas/Bolo-Maracuja/2.mp4","type":"video"}],"Pudim":[{"name":"5.mp4","path":"ofertas/Pudim/5.mp4","type":"video"},{"name":"6.mp4","path":"ofertas/Pudim/6.mp4","type":"video"}]});
+        const extraData = [];
+        
+        function openModule(moduleName) {
+            const files = moduleData[moduleName];
+            if (!files || files.length === 0) return;
+            
+            // Criar página de módulo dinamicamente
+            const moduleHTML = generateModulePage(moduleName, files);
+            document.body.innerHTML = moduleHTML;
+        }
+        
+        function openFile(filePath) {
+            // Detectar tipo de arquivo pela extensão
+            const fileExt = filePath.split('.').pop().toLowerCase();
+            const fileName = filePath.split('/').pop();
+            
+            if (['mp4', 'mov', 'avi', 'mkv', 'wmv'].includes(fileExt)) {
+                // Abrir player de vídeo
+                showVideoPlayer(filePath, fileName);
+            } else if (fileExt === 'pdf') {
+                // Abrir visualizador de PDF
+                showPDFViewer(filePath, fileName);
+            } else {
+                // Se path já tem prefixo (ofertas/), não adicionar arquivos/
+                const fileUrl = filePath.includes('/') && (filePath.startsWith('ofertas/')) ? filePath : 'arquivos/' + filePath;
+                window.open(fileUrl, '_blank');
+            }
+        }
+        
+        function showVideoPlayer(filePath, fileName) {
+            // Criar modal para player de vídeo
+            const modal = document.createElement('div');
+            modal.className = 'video-modal';
+            modal.innerHTML = `
+                <div class="video-modal-content">
+                    <div class="video-modal-header">
+                        <h3>🎥 ${fileName}</h3>
+                        <button class="video-modal-close" onclick="closeVideoPlayer()">&times;</button>
+                    </div>
+                    <div class="video-container">
+                        <video controls autoplay>
+                            <source src="${filePath.startsWith('ofertas/') ? filePath : 'arquivos/' + filePath}" type="video/mp4">
+                            Seu navegador não suporta o elemento de vídeo.
+                        </video>
+                    </div>
+                    <div class="video-modal-actions">
+                        <button class="modal-btn" onclick="closeVideoPlayer()">❌ Fechar</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function showPDFViewer(filePath, fileName) {
+            // Criar modal para visualizador de PDF
+            const modal = document.createElement('div');
+            modal.className = 'video-modal';
+            modal.innerHTML = `
+                <div class="video-modal-content">
+                    <div class="video-modal-header">
+                        <h3>📄 ${fileName}</h3>
+                        <button class="video-modal-close" onclick="closeVideoPlayer()">&times;</button>
+                    </div>
+                    <div class="pdf-container">
+                        <iframe src="${filePath.startsWith('ofertas/') ? filePath : 'arquivos/' + filePath}" width="100%" height="600px">
+                            <p>Seu navegador não suporta visualização de PDF. 
+                               <a href="${filePath.startsWith('ofertas/') ? filePath : 'arquivos/' + filePath}" target="_blank">Clique aqui para baixar</a>
+                            </p>
+                        </iframe>
+                    </div>
+                    <div class="video-modal-actions">
+                        <button class="modal-btn" onclick="downloadFile('${filePath.startsWith('ofertas/') ? filePath : 'arquivos/' + filePath}')">📥 Download</button>
+                        <button class="modal-btn" onclick="closeVideoPlayer()">❌ Fechar</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeVideoPlayer() {
+            const modal = document.querySelector('.video-modal');
+            if (modal) {
+                document.body.removeChild(modal);
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        function downloadFile(fileUrl) {
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        
+        function generateModulePage(moduleName, files) {
+            const moduleTitle = moduleName.replace(/[-_]/g, ' ').replace(/w/g, l => l.toUpperCase());
+            
+            const filesList = files.map(file => `
+                <div class="file-item" onclick="openFile('${file.path}')">
+                    <div class="file-icon">${file.type === 'video' ? '🎥' : '📄'}</div>
+                    <div class="file-info">
+                        <h4 class="file-name">${file.name}</h4>
+                        <p class="file-type">${file.type === 'video' ? 'Vídeo' : 'Documento'}</p>
+                    </div>
+                    <div class="file-action">
+                        <button class="download-btn">📥 Abrir</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            return `
+                <div class="member-dashboard">
+                    <header class="dashboard-header">
+                        <div class="header-content">
+                            <h1 class="course-title">📖 ${moduleTitle}</h1>
+                            <div class="user-info">
+                                <button class="logout-btn" onclick="goBack()">← Voltar</button>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <main class="dashboard-content">
+                        <h2 class="section-title">🎥 Arquivos deste módulo</h2>
+                        
+                        <div class="files-list">
+                            ${filesList}
+                        </div>
+                        
+                        <div class="support-section">
+                            <h3 class="support-title">💬 Suporte</h3>
+                            <p class="support-text">Precisa de ajuda? Entre em contato conosco:</p>
+                            <div class="support-contacts">
+                                <div class="support-contact">
+                                    <span>📧</span>
+                                    <span>suporte@seusite.com</span>
+                                </div>
+                                <div class="support-contact">
+                                    <span>📱</span>
+                                    <span>WhatsApp: (11) 99999-9999</span>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+                
+                <style>
+                    .files-list {
+                        background: #1f1f1f;
+                        border-radius: 12px;
+                        padding: 20px;
+                        margin-bottom: 30px;
+                    }
+                    
+                    .file-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                        padding: 16px;
+                        background: #2a2a2a;
+                        border-radius: 8px;
+                        margin-bottom: 12px;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    }
+                    
+                    .file-item:hover {
+                        background: #333;
+                    }
+                    
+                    .file-icon {
+                        font-size: 24px;
+                        width: 40px;
+                        text-align: center;
+                    }
+                    
+                    .file-info {
+                        flex: 1;
+                    }
+                    
+                    .file-name {
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #ffffff;
+                        margin-bottom: 4px;
+                    }
+                    
+                    .file-type {
+                        font-size: 14px;
+                        color: #ccc;
+                    }
+                    
+                    .download-btn {
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        transition: background 0.3s;
+                    }
+                    
+                    .download-btn:hover {
+                        background: #0056b3;
+                    }
+                </style>
+            `;
+        }
+        
+        function goBack() {
+            window.location.reload();
+        }
+        
+        function buyOffer(offerName, offerTitle, offerPrice) {
+            // 🔍 Verificar se oferta já está liberada
+            if (localStorage.getItem('oferta_' + offerName) === 'liberada') {
+                // 🎯 TENTAR ABRIR COMO MÓDULO, se não existir fazer nada (já está liberado visualmente)
+                if (typeof openModule === 'function') {
+                    try {
+                        openModule(offerName);
+                    } catch (e) {
+                        console.log('⚠️ Oferta liberada mas sem módulo correspondente:', offerName);
+                    }
+                }
+                return;
+            }
+            
+            // 🆕 USAR NOVO SISTEMA DE VALIDAÇÕES
+            if (typeof buyOfferWithValidation === 'function') {
+                buyOfferWithValidation(offerName, offerTitle, offerPrice);
+            } else {
+                console.error('❌ Sistema de validações não carregado!');
+            }
+        }
+        
+        // 🗑️ FUNÇÃO REMOVIDA - CÓDIGO MOVIDO PARA area-membros-validacoes-pagamento.js
+        
+        async function showOfferCheckoutModal_REMOVED() {
+            // 🔒 TRAVAR SCROLL DA PÁGINA DE FUNDO
+            document.body.style.overflow = 'hidden';
+            
+            // 🆕 BUSCAR DADOS EXISTENTES DO CLIENTE PARA PRÉ-PREENCHIMENTO
+            const customerData = await loadCustomerDataFromGitHub();
+            
+            // Formatação do preço para exibição
+            const priceFormatted = offerPrice.toFixed(2).replace('.', ',');
+            const pricePerInstallment2x = (offerPrice / 2).toFixed(2).replace('.', ',');
+            const pricePerInstallment3x = (offerPrice / 3).toFixed(2).replace('.', ',');
+            
+            // Criar modal dinamicamente
+            const modal = document.createElement('div');
+            modal.className = 'offer-checkout-modal';
+            modal.innerHTML = `
+                <div class="offer-modal-overlay">
+                    <div class="offer-modal-content">
+                        <div class="offer-modal-header">
+                            <h3>🎁 ${offerTitle}</h3>
+                            <button class="offer-modal-close" onclick="closeOfferModal()">&times;</button>
+                        </div>
+                        <div class="offer-modal-body">
+                            <p>👋 Oferta exclusiva para você!</p>
+                            <div class="offer-price">💰 R$ ${priceFormatted}</div>
+                            
+                            <div class="offer-payment-methods">
+                                <h4>💳 Escolha sua forma de pagamento:</h4>
+                                <button class="offer-payment-btn" onclick="showOfferPaymentForm('${offerName}', 'pix', ${offerPrice})">
+                                    📱 PIX Instantâneo
+                                </button>
+                                <button class="offer-payment-btn" onclick="showOfferPaymentForm('${offerName}', 'card', ${offerPrice})">
+                                    💳 Cartão de Crédito
+                                </button>
+                            </div>
+                            
+                            <!-- Formulário PIX (inicialmente oculto) -->
+                            <div id="pix-form" class="offer-payment-form" style="display: none;">
+                                <h4>📱 Pagamento via PIX</h4>
+                                <div class="form-group">
+                                    <label>Nome Completo:</label>
+                                    <input type="text" id="pix-name" value="${customerData?.nome || ''}" placeholder="Seu nome completo" ${customerData?.nome ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" id="pix-email" value="${customerData?.email || ''}" placeholder="seu@email.com" ${customerData?.email ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>CPF:</label>
+                                    <input type="text" id="pix-cpf" value="${customerData?.cpf ? customerData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : ''}" placeholder="000.000.000-00" ${customerData?.cpf ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>Telefone:</label>
+                                    <input type="tel" id="pix-phone" value="${customerData?.telefone || ''}" placeholder="(11) 99999-9999" ${customerData?.telefone ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <button class="offer-buy-btn offer-payment-btn" onclick="processOfferPayment('${offerName}', 'pix', ${offerPrice})">
+                                    🚀 Gerar PIX R$ ${priceFormatted}
+                                </button>
+                                <button class="offer-back-btn" onclick="backToPaymentMethods()">
+                                    ← Voltar
+                                </button>
+                            </div>
+                            
+                            <!-- Formulário Cartão (inicialmente oculto) -->
+                            <div id="card-form" class="offer-payment-form" style="display: none;">
+                                <h4>💳 Pagamento com Cartão</h4>
+                                <div class="form-group">
+                                    <label>Nome Completo:</label>
+                                    <input type="text" id="card-name" value="${customerData?.nome || ''}" placeholder="Seu nome completo" ${customerData?.nome ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="email" id="card-email" value="${customerData?.email || ''}" placeholder="seu@email.com" ${customerData?.email ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>CPF:</label>
+                                    <input type="text" id="card-cpf" value="${customerData?.cpf ? customerData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : ''}" placeholder="000.000.000-00" ${customerData?.cpf ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>Telefone:</label>
+                                    <input type="tel" id="card-phone" value="${customerData?.telefone || ''}" placeholder="(11) 99999-9999" ${customerData?.telefone ? 'readonly style="background-color: #f8f9fa; color: #6c757d;"' : ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label>Número do Cartão:</label>
+                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Validade:</label>
+                                        <input type="text" id="card-expiry" placeholder="MM/AA">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CVV:</label>
+                                        <input type="text" id="card-cvv" placeholder="123">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nome no Cartão:</label>
+                                    <input type="text" id="card-holder" placeholder="Nome como impresso no cartão">
+                                </div>
+                                <div class="form-group">
+                                    <label>Parcelas:</label>
+                                    <select id="card-installments">
+                                        <option value="1">1x de R$ ${priceFormatted} (sem juros)</option>
+                                        <option value="2">2x de R$ ${pricePerInstallment2x} (sem juros)</option>
+                                        <option value="3">3x de R$ ${pricePerInstallment3x} (sem juros)</option>
+                                    </select>
+                                </div>
+                                <button class="offer-buy-btn offer-payment-btn" onclick="processOfferPayment('${offerName}', 'card', ${offerPrice})">
+                                    🚀 Pagar R$ ${priceFormatted}
+                                </button>
+                                <button class="offer-back-btn" onclick="backToPaymentMethods()">
+                                    ← Voltar
+                                </button>
+                            </div>
+                            
+                            <button class="offer-cancel-btn" onclick="closeOfferModal()">❌ Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar CSS inline para o modal
+            if (!document.getElementById('offer-modal-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'offer-modal-styles';
+                styles.innerHTML = `
+                    .offer-checkout-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 9999;
+                    }
+                    .offer-modal-overlay {
+                        background: rgba(0,0,0,0.8);
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .offer-modal-content {
+                        background: white;
+                        border-radius: 10px;
+                        max-width: 400px;
+                        width: 90%;
+                        max-height: 80%;
+                        overflow-y: auto;
+                    }
+                    .offer-modal-header {
+                        padding: 20px;
+                        border-bottom: 1px solid #eee;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .offer-modal-header h3 {
+                        margin: 0;
+                        color: #333;
+                    }
+                    .offer-modal-close {
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        color: #999;
+                    }
+                    .offer-modal-body {
+                        padding: 20px;
+                        text-align: center;
+                    }
+                    .offer-price {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #28a745;
+                        margin: 15px 0;
+                    }
+                    .offer-payment-methods h4 {
+                        color: #333;
+                        margin-bottom: 15px;
+                    }
+                    .offer-payment-btn {
+                        display: block;
+                        width: 100%;
+                        padding: 15px;
+                        margin: 10px 0;
+                        background: #007bff;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        font-size: 16px;
+                    }
+                    .offer-payment-btn:hover {
+                        background: #0056b3;
+                    }
+                    .offer-cancel-btn {
+                        margin-top: 15px;
+                        padding: 10px 20px;
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                    .offer-payment-form {
+                        margin-top: 20px;
+                        text-align: left;
+                    }
+                    .form-group {
+                        margin-bottom: 15px;
+                    }
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 5px;
+                        font-weight: bold;
+                        color: #333;
+                    }
+                    .form-group input,
+                    .form-group select {
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        box-sizing: border-box;
+                    }
+                    .form-row {
+                        display: flex;
+                        gap: 10px;
+                    }
+                    .form-row .form-group {
+                        flex: 1;
+                    }
+                    .offer-back-btn {
+                        width: 100%;
+                        padding: 10px;
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                    .offer-back-btn:hover {
+                        background: #545b62;
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+            
+            document.body.appendChild(modal);
+        }
+        
+        function closeOfferModal() {
+            const modal = document.querySelector('.offer-checkout-modal');
+            if (modal) {
+                modal.remove();
+            }
+            // 🔓 DESTRAVAR SCROLL DA PÁGINA
+            document.body.style.overflow = 'auto';
+        }
+        
+        function showOfferPaymentForm(offerName, paymentType, offerPrice = 37.00) {
+            // Ocultar métodos de pagamento
+            document.querySelector('.offer-payment-methods').style.display = 'none';
+            document.querySelector('.offer-cancel-btn').style.display = 'none';
+            
+            // Mostrar formulário específico
+            if (paymentType === 'pix') {
+                document.getElementById('pix-form').style.display = 'block';
+            } else if (paymentType === 'card') {
+                document.getElementById('card-form').style.display = 'block';
+            }
+        }
+        
+        function backToPaymentMethods() {
+            // Ocultar formulários
+            document.getElementById('pix-form').style.display = 'none';
+            document.getElementById('card-form').style.display = 'none';
+            
+            // Mostrar métodos de pagamento
+            document.querySelector('.offer-payment-methods').style.display = 'block';
+            document.querySelector('.offer-cancel-btn').style.display = 'block';
+        }
+        
+        function processOfferPayment(offerName, paymentType, offerPrice = 37.00) {
+            // ✅ PREVENIR DUPLO CLIQUE E LOADING INSTANTÂNEO
+            const button = event.target || document.querySelector('.offer-buy-btn');
+            if (button.disabled) return;
+            
+            const originalText = button.textContent;
+            button.disabled = true;
+            
+            // ✅ TEXTO CORRETO BASEADO NO TIPO DE PAGAMENTO
+            if (paymentType === 'pix') {
+                button.textContent = '⏳ Gerando PIX...';
+            } else if (paymentType === 'card') {
+                button.textContent = '💳 Processando Cartão...';
+            }
+            
+            button.style.opacity = '0.7';
+            
+            // Coletar dados do formulário
+            let customerData = {};
+            
+            if (paymentType === 'pix') {
+                customerData = {
+                    name: document.getElementById('pix-name').value,
+                    email: document.getElementById('pix-email').value,
+                    cpf: document.getElementById('pix-cpf').value,
+                    phone: document.getElementById('pix-phone').value
+                };
+            } else if (paymentType === 'card') {
+                customerData = {
+                    name: document.getElementById('card-name').value,
+                    email: document.getElementById('card-email').value,
+                    cpf: document.getElementById('card-cpf').value,
+                    phone: document.getElementById('card-phone').value,
+                    cardNumber: document.getElementById('card-number').value,
+                    cardExpiry: document.getElementById('card-expiry').value,
+                    cardCvv: document.getElementById('card-cvv').value,
+                    cardHolder: document.getElementById('card-holder').value,
+                    installments: document.getElementById('card-installments').value
+                };
+            }
+            
+            // Validar campos obrigatórios básicos
+            if (!customerData.name || !customerData.email || !customerData.cpf || !customerData.phone) {
+                alert('❌ Por favor, preencha todos os campos obrigatórios!');
+                button.disabled = false;
+                button.textContent = originalText;
+                button.style.opacity = '1';
+                return;
+            }
+            
+            // 🎯 VALIDAÇÕES VISUAIS PROFISSIONAIS (CORREÇÃO DEFINITIVA!)
+            if (paymentType === 'card') {
+                // 1. VALIDAÇÃO CARTÃO
+                if (!validateCardNumber(customerData.cardNumber)) {
+                    console.log('❌ BLOQUEADO: Cartão inválido!');
+                    button.style.setProperty('background', '#ff9500', 'important');
+                    button.innerHTML = '⚠️ Cartão deve ter 16 dígitos';
+                    button.disabled = true;
+                    const cardField = document.getElementById('card-number');
+                    if (cardField) {
+                        cardField.style.borderColor = '#dc3545';
+                        cardField.style.borderWidth = '2px';
+                        cardField.focus();
+                    }
+                    setTimeout(() => {
+                        button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                        button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                        button.disabled = false;
+                        if (cardField) {
+                            cardField.style.borderColor = '#ddd';
+                            cardField.style.borderWidth = '1px';
+                        }
+                    }, 5000);
+                    return;
+                }
+                
+                // 2. VALIDAÇÃO VALIDADE
+                if (!validateCardExpiry(customerData.cardExpiry)) {
+                    console.log('❌ BLOQUEADO: Validade inválida!');
+                    button.style.setProperty('background', '#ff9500', 'important');
+                    button.innerHTML = '⚠️ Validade deve ser MM/AA';
+                    button.disabled = true;
+                    const expiryField = document.getElementById('card-expiry');
+                    if (expiryField) {
+                        expiryField.style.borderColor = '#dc3545';
+                        expiryField.style.borderWidth = '2px';
+                        expiryField.focus();
+                    }
+                    setTimeout(() => {
+                        button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                        button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                        button.disabled = false;
+                        if (expiryField) {
+                            expiryField.style.borderColor = '#ddd';
+                            expiryField.style.borderWidth = '1px';
+                        }
+                    }, 5000);
+                    return;
+                }
+                
+                // 3. VALIDAÇÃO CVV
+                if (!validateCardCVV(customerData.cardCvv)) {
+                    console.log('❌ BLOQUEADO: CVV inválido!');
+                    button.style.setProperty('background', '#ff9500', 'important');
+                    button.innerHTML = '⚠️ CVV deve ter 3 dígitos';
+                    button.disabled = true;
+                    const cvvField = document.getElementById('card-cvv');
+                    if (cvvField) {
+                        cvvField.style.borderColor = '#dc3545';
+                        cvvField.style.borderWidth = '2px';
+                        cvvField.focus();
+                    }
+                    setTimeout(() => {
+                        button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                        button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                        button.disabled = false;
+                        if (cvvField) {
+                            cvvField.style.borderColor = '#ddd';
+                            cvvField.style.borderWidth = '1px';
+                        }
+                    }, 5000);
+                    return;
+                }
+                
+                // 4. VALIDAÇÃO NOME
+                if (!validateName(customerData.cardHolder)) {
+                    console.log('❌ BLOQUEADO: Nome inválido!');
+                    button.style.setProperty('background', '#ff9500', 'important');
+                    button.innerHTML = '⚠️ Nome deve ter pelo menos 3 caracteres';
+                    button.disabled = true;
+                    const holderField = document.getElementById('card-holder');
+                    if (holderField) {
+                        holderField.style.borderColor = '#dc3545';
+                        holderField.style.borderWidth = '2px';
+                        holderField.focus();
+                    }
+                    setTimeout(() => {
+                        button.style.setProperty('background', 'linear-gradient(135deg, #28a745 0%, #20a83a 100%)', 'important');
+                        button.innerHTML = '🚀 Pagar R$ ' + offerPrice.toFixed(2).replace('.', ',');
+                        button.disabled = false;
+                        if (holderField) {
+                            holderField.style.borderColor = '#ddd';
+                            holderField.style.borderWidth = '1px';
+                        }
+                    }, 5000);
+                    return;
+                }
+            }
+            
+            // Enviar dados para o servidor
+            console.log('🚀 Enviando dados para o servidor:', {
+                offer: offerName,
+                paymentType: paymentType,
+                customer: customerData
+            });
+            
+            // 🔧 CORREÇÃO CIRÚRGICA: URLs Vercel corretas para área de membros
+            const endpoint = paymentType === 'card' ? 
+                'https://checkout-ofertas-appmax.vercel.app/api/process-card' :
+                'https://checkout-ofertas-appmax.vercel.app/api/process-pix';
+            
+            const requestData = {
+                offer: offerName,
+                paymentType: paymentType,
+                customer: {
+                    name: customerData.name,
+                    email: customerData.email,
+                    cpf: customerData.cpf,
+                    phone: customerData.phone
+                },
+                amount: offerPrice,
+                repositoryUrl: window.REPOSITORY_URL // 🆕 URL DINÂMICA
+            };
+            
+            // Adicionar dados do cartão se for pagamento com cartão
+            if (paymentType === 'card') {
+                requestData.card = {
+                    number: customerData.cardNumber.replace(/s/g, ''),
+                    expiry_month: customerData.cardExpiry.split('/')[0],
+                    expiry_year: '20' + customerData.cardExpiry.split('/')[1],
+                    cvv: customerData.cardCvv,
+                    holder_name: customerData.cardHolder
+                };
+                requestData.installments = customerData.installments || 1;
+            }
+            
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Resposta do servidor:', data);
+                
+                // 🔓 SISTEMA DESBLOQUEIO AUTOMÁTICO
+                if (data.success && data.unlock) {
+                    localStorage.setItem('oferta_' + offerName, 'liberada');
+                    // 🎨 REMOVER ALERT FEIO - usar reload direto
+                    setTimeout(() => location.reload(), 1000);
+                }
+                
+                if (data.success) {
+                    console.log('✅ Pagamento aprovado, verificando QR Code...');
+                    // ✅ REATIVAR BOTÃO APÓS SUCESSO
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    button.style.opacity = '1';
+                    
+                    // Mostrar QR Code PIX
+                    if (data.qr_code) {
+                        console.log('📱 QR Code encontrado, chamando showPixQRCode()...');
+                        showPixQRCode(data.qr_code, data.qr_code_base64);
+                    } else {
+                        console.log('💳 Pagamento sem QR Code (cartão?)');
+                        // 🎨 REMOVER ALERT FEIO - fechar modal direto
+                        closeOfferModal();
+                    }
+                } else {
+                    alert('❌ Erro no pagamento: ' + (data.message || 'Erro desconhecido'));
+                    // ✅ REATIVAR BOTÃO EM CASO DE ERRO NO PAGAMENTO
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    button.style.opacity = '1';
+                }
+            })
+            .catch(error => {
+                console.error('❌ Erro na requisição:', error);
+                alert('❌ Erro na comunicação com o servidor. Tente novamente.');
+                // ✅ REATIVAR BOTÃO EM CASO DE ERRO
+                button.disabled = false;
+                button.textContent = originalText;
+                button.style.opacity = '1';
+            });
+        }
+        
+        function showPixQRCode(qrCode, qrCodeBase64) {
+            // Criar modal para exibir QR Code PIX
+            const modal = document.createElement('div');
+            modal.className = 'pix-qr-modal';
+            modal.innerHTML = 
+                '<div class="offer-modal-overlay">' +
+                    '<div class="offer-modal-content">' +
+                        '<div class="offer-modal-body">' +
+                            '<button class="offer-modal-close" onclick="closePixQRModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; z-index: 1;">&times;</button>' +
+                            '<div style="text-align: center; padding: 25px 50px 20px 20px;">' +
+                                '<h3 style="margin: 0 0 25px 0; color: #333; font-size: 18px;">📱 Escaneie com seu banco ou app</h3>' +
+                                
+                                '<div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: inline-block; border: 2px solid #eee;">' +
+                                    '<img src="data:image/png;base64,' + qrCodeBase64 + '" alt="QR Code PIX" style="width: 250px; height: 250px; display: block;">' +
+                                '</div>' +
+                                
+                                '<div style="margin-bottom: 20px;">' +
+                                    '<p style="margin-bottom: 10px; font-weight: bold; color: #333;">📋 Ou copie o código PIX:</p>' +
+                                    '<div class="pix-code-text" onclick="copyPixCodeDirect()" style="background: #f5f5f5; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 12px; margin-bottom: 10px; max-height: 80px; overflow-y: auto; color: #333; cursor: pointer; border: 1px solid #ddd; transition: all 0.2s ease;" onmouseover="this.style.background=&quot;#e9e9e9&quot;" onmouseout="this.style.background=&quot;#f5f5f5&quot;" title="Clique para copiar">' +
+                                        qrCode +
+                                    '</div>' +
+                                    '<button onclick="copyPixCode()" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">' +
+                                        '📋 Copiar Código PIX' +
+                                    '</button>' +
+                                '</div>' +
+                                
+                                '<div style="background: #e7f3ff; padding: 15px; border-radius: 8px; border-left: 4px solid #0088cc;">' +
+                                    '<p style="margin: 0; font-size: 14px; color: #0066cc;">' +
+                                        '⏰ <strong>Importante:</strong> O PIX expira em 1 hora. Após o pagamento, sua oferta será liberada automaticamente.' +
+                                    '</p>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            
+            // ✅ ADICIONAR CSS NECESSÁRIO PARA MODAL PIX (igual ao modal ofertas)
+            if (!document.querySelector('#pix-modal-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'pix-modal-styles';
+                styles.textContent = `
+                    .pix-qr-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 9999;
+                    }
+                    .pix-qr-modal .offer-modal-overlay {
+                        background: rgba(0,0,0,0.8);
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .pix-qr-modal .offer-modal-content {
+                        background: white;
+                        border-radius: 10px;
+                        max-width: 520px;
+                        width: 90%;
+                        max-height: 90%;
+                        overflow-y: auto;
+                    }
+                    .pix-qr-modal .offer-modal-content {
+                        position: relative;
+                    }
+                    .pix-qr-modal .offer-modal-body {
+                        padding: 0;
+                    }
+                    .copy-notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #28a745;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        z-index: 10000;
+                        font-size: 14px;
+                        font-weight: 500;
+                        animation: slideInRight 0.3s ease-out;
+                    }
+                    @keyframes slideInRight {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                    @keyframes slideOutRight {
+                        from {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                        to {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes fadeOut {
+                        from { opacity: 1; transform: translateY(0); }
+                        to { opacity: 0; transform: translateY(-10px); }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+            
+            document.body.appendChild(modal);
+            console.log('📱 Modal PIX criado com CSS correto');
+        }
+        
+        function closePixQRModal() {
+            const modal = document.querySelector('.pix-qr-modal');
+            if (modal) {
+                modal.remove();
+            }
+            // 🔒 MANTÉM SCROLL TRAVADO (ainda tem popup ofertas aberto)
+        }
+        
+        function showCopyNotification() {
+            // Remove notificação existente se houver
+            const existingNotification = document.querySelector('.copy-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Criar nova notificação dentro do modal
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification';
+            notification.innerHTML = '✅ Código copiado com sucesso!';
+            notification.style.cssText = 'background: #28a745; color: white; padding: 8px 12px; border-radius: 5px; font-size: 12px; margin: 10px 0; text-align: center; animation: fadeIn 0.3s ease-out;';
+            
+            // Inserir entre o código PIX e o botão
+            const pixCodeDiv = document.querySelector('.pix-qr-modal .pix-code-text');
+            if (pixCodeDiv && pixCodeDiv.parentNode) {
+                pixCodeDiv.parentNode.insertBefore(notification, pixCodeDiv.nextSibling);
+            }
+            
+            // Remover após 2 segundos
+            setTimeout(() => {
+                if (notification && notification.parentNode) {
+                    notification.style.animation = 'fadeOut 0.3s ease-in';
+                    setTimeout(() => {
+                        if (notification && notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 2000);
+        }
+        
+        function copyPixCodeDirect() {
+            const pixCodeElement = document.querySelector('.pix-qr-modal .pix-code-text');
+            if (!pixCodeElement) return;
+            
+            const pixCode = pixCodeElement.textContent;
+            navigator.clipboard.writeText(pixCode).then(() => {
+                showCopyNotification();
+            }).catch(() => {
+                // Fallback para navegadores antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = pixCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyNotification();
+            });
+        }
+        
+        function copyPixCode() {
+            copyPixCodeDirect();
+        }
+
+        // 🆕 FUNÇÃO: Buscar dados do cliente no GitHub para pré-preenchimento
+        async function loadCustomerDataFromGitHub() {
+            try {
+                // Obter email do usuário logado
+                const userEmail = localStorage.getItem('memberEmail');
+                if (!userEmail) {
+                    console.log('⚠️ Email não encontrado no localStorage');
+                    return null;
+                }
+                
+                // Obter dados do repositório dinamicamente
+                const repoPath = window.location.pathname.split('/');
+                const owner = 'felipedom10m';
+                const repo = repoPath[1];
+                
+                // Sanitizar email para nome de arquivo seguro
+                const safeEmail = userEmail.replace(/[^a-zA-Z0-9@.-]/g, '_');
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/customers/${safeEmail}.json`;
+                
+                console.log('🔍 Buscando dados do cliente:', userEmail);
+                
+                const response = await fetch(apiUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const customerData = JSON.parse(atob(data.content));
+                    
+                    
+                    console.log('✅ Dados do cliente encontrados:', {
+                        nome: customerData.nome ? '✅' : '❌',
+                        email: customerData.email ? '✅' : '❌',
+                        cpf: customerData.cpf ? '✅' : '❌',
+                        telefone: customerData.telefone ? '✅' : '❌'
+                    });
+                    
+                    return customerData;
+                } else {
+                    console.log('⚠️ Dados do cliente não encontrados no GitHub');
+                    return null;
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao buscar dados do cliente:', error);
+                return null;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('memberAuth');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
